@@ -1,0 +1,5 @@
+1) ER Diagram -> Fan
+2) Relational schema -> Osman
+3) Populate schema with data -> Craig
+4) Queries -> Tanveer
+5) GUI (php/html) -> Tanveer

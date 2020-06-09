@@ -34,8 +34,8 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
-//
-//// Use schema
+
+// Use schema
 //$sql = "Use cxc55311";
 //if($conn -> query($sql) === false) {
 //    echo "use query failed";

@@ -41,11 +41,11 @@ VALUES ('Indigo', 'contact@indigo.com', '438-123-4567', 'Street Main', 'Toronto'
        ('Monkeyshines', 'contact@moneykshines.com', '403-240-1723', '2215 33rd Ave SW', 'Calgary', ' T2T 1Z9', 'Alberta'),
        ('Albion Books', 'contact@albionbooks.com', '604-662-3113', '523 Richards St.', 'Vancouver', 'V6B 2Z6',
         'British Columbia'),
-       ('Book Warehouse', 'query@bookwarehouse.com', '604-872-5711', ' 632 West Broadway ', 'Vancouver', 'V5Z 1G1',
+       ('Book Warehouse', 'query@bookwarehouse.com', '604-872-5711', '632 West Broadway ', 'Vancouver', 'V5Z 1G1',
         'British Columbia'),
-       ('Mill Street Books', 'contact@millbooks.com', '613-256-9090', ' 52 Mill St. ', 'Almonte', 'K0A 1A0', 'Ontario'),
-       ('Epic Books', 'inquiry@epicbooks.com', '905-525-6538', ' 226 Locke St. S. ', 'Hamilton', 'L8R 3B2', 'Ontario'),
-       ('Attic Books', 'info@atticbooks.ca ', '519-432-7277', ' 240 Dundas St.', 'London', 'N6A 1H3', 'Ontario'),
+       ('Mill Street Books', 'contact@millbooks.com', '613-256-9090', '52 Mill St. ', 'Almonte', 'K0A 1A0', 'Ontario'),
+       ('Epic Books', 'inquiry@epicbooks.com', '905-525-6538', '226 Locke St. S. ', 'Hamilton', 'L8R 3B2', 'Ontario'),
+       ('Attic Books', 'info@atticbooks.ca ', '519-432-7277', '240 Dundas St.', 'London', 'N6A 1H3', 'Ontario'),
        ('Appetite for Books', 'info@appetitebooks.ca', '514-369-2002', '388 Victoria Ave', 'Westmount', 'H3Z 2N4', 'Quebec'),
        ('Argo Bookshop', 'info@argobookshop.ca', '514-931-3442', '1915 rue Sainte-Catherine ouest', 'Montreal', 'H3H 1M3',
         'Quebec');
@@ -119,7 +119,7 @@ VALUES ('234', 'Novel'),
 
 INSERT INTO Inventory (ISBN, BookstoreName, QtySold, QtyOnHand)
 VALUES ('987-6-54-60197', 'Indigo', '0', '5'),
-       ('498-3-34-14690', 'Indigo', '100', '150'),
+       ('498-3-34-14690', 'Fair\'s Fair Books', '100', '150'),
        ('563-4-56-35673', 'Albion Books', '20', '10'),
        ('765-2-34-67894', 'Book Warehouse', '40', '8'),
        ('876-8-56-98765', 'Mill Street Books', '10', '10'),
@@ -153,7 +153,7 @@ VALUES ('7349', '10', '2020-5-20'),
 
 INSERT INTO CustomerBookstoreOrder (OrderNumber, ISBN, BookstoreName, CustomerID, BackOrder)
 VALUES ('7349', '498-3-34-14690', 'Indigo', '234', false),
-       ('7350', '987-6-54-60197', 'Indigo', '234', true),
+       ('7350', '987-6-54-60197', 'Fair\'s Fair Books', '234', true),
        ('1234', '563-4-56-35673', 'Albion Books', '101', false),
        ('4564', '765-2-34-67894', 'Book Warehouse', '765', false),
        ('3847', '876-8-56-98765', 'Mill Street Books', '444', false),
@@ -173,6 +173,6 @@ VALUES ('8945', '498-3-34-14690', 'Indigo', '1', 'Saint-Catherine', false),
        ('4944', '765-3-80-56745', 'Appetite for Books', '7', 'Brick North', false),
        ('2334', '456-3-45-67544', 'Argo Bookshop', '8', 'Queens', false),
        ('6054', '876-8-56-45675', 'Monkeyshines', '9', 'Rosedale', false),
-       ('2232', '987-6-54-60197', 'Indigo', '1', 'Saint-Catherine', false);
+       ('2232', '987-6-54-60197', 'Fair\'s Fair Books', '1', 'Saint-Catherine', false);
 
 

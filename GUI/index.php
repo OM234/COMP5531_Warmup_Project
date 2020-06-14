@@ -10,34 +10,48 @@ include_once 'header.php';
         <p class="display-4">Warm-Up project</p>
         <h3>Team</h3>
         <div class="d-flex justify-content-center">
-            <div class="row">
+            <div class="row font-weight-bold">
                 <div class="col-sm">
                     <ul class="list-group bg-light">
-                        <li class="list-group-item bg-light border-0">Osman</li>
-                        <li class="list-group-item bg-light border-0">Craig</li>
+                        <li class="list-group-item bg-light border-0">
+                        Osman Momoh <br>
+                        ID: 26220150
+                        </li>
+                        <li class="list-group-item bg-light border-0">
+                        Craig Boucher <br>
+                        ID:21295721
+                        </li>
                     </ul>
                 </div>
                 <div class="col-sm bg-light">
                     <ul class="list-group">
-                        <li class="list-group-item bg-light border-0">Fan</li>
-                        <li class="list-group-item bg-light border-0">Tanveer</li>
+                        <li class="list-group-item bg-light border-0">
+                        Fan Zou <br>
+                        ID:40118112
+                        </li>
+                        <li class="list-group-item bg-light border-0">
+                        Tanveer Alamgir
+                        ID:40014877
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
+    <?php
+$baseURL = "php/controller.php?question=";
+?>
     <!-- E/R diagram and All tables -->
     <section class="mt-3 p-2 bg-light">
-        <p class="font-weight-bolder">Link to E/R Diagram (Lucid chart) and All tables in the DB</p>
+        <p class="font-weight-bolder">E/R Diagram, count(*) of all relational tables & data in all entities and relational tables</p>
         <div class="erDiagram mt-2 d-flex justify-content-between">
-            <a href="https://app.lucidchart.com/invitations/accept/2fe3aa92-88d3-4b64-9048-ec2878a1bb2b" target="_blank" class="btn btn-secondary stretch-link">E/R Diagram</a>
-            <a href="#" class="btn btn-secondary stretch-link">All tables</a>
+            <a href="<?echo $baseURL . 13 ?>" target="_blank" class="btn btn-secondary stretch-link">E/R Diagram</a>
+            <a href="<?echo $baseURL . 11 ?>" class="btn btn-secondary stretch-link">Count of all relation</a>
+            <a href="<?echo $baseURL . 12 ?>" class="btn btn-secondary stretch-link">All tables</a>
         </div>
     </section>
     <!-- Queries -->
-<?php
-$baseURL = "php/controller.php?question=";
-?>
+
     <section class="bg-light mt-3 p-2">
         <p class="font-weight-bolder">Click each link below to run the query</p>
         <div class="queries mt-3">

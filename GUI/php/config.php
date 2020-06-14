@@ -24,9 +24,9 @@ $stm = $pdo->query('SELECT * FROM Author');
 
 function connectDB()
 {
-    define("HOST", "cxc5531.encs.concordia.ca:3306");
-    define("USER_NAME", "cxc55311");
-    define("PASSWORD", "pa1234ss");
+    define("HOST", "localhost");
+    define("USER_NAME", "root");
+    define("PASSWORD", "root");
     define("DB_NAME", "cxc55311");
 
     //Setting up data source name (DSN)

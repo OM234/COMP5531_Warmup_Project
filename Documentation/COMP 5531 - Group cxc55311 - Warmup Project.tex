@@ -1,0 +1,458 @@
+\documentclass{scrreprt}
+\setcounter{secnumdepth}{5}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{underscore}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{changepage}% http://ctan.org/pkg/changepage
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\hypersetup{
+    bookmarks=false,    % show bookmarks bar?
+    pdftitle={COMP 5531: Warmup Project},    % title
+    pdfauthor={Yiannis Lazarides},                     % author
+    pdfsubject={TeX and LaTeX},                        % subject of the document
+    pdfkeywords={TeX, LaTeX, graphics, images}, % list of keywords
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,       % color of internal links
+    citecolor=black,       % color of links to bibliography
+    filecolor=black,        % color of file links
+    urlcolor=purple,        % color of external links
+    linktoc=page            % only page is linked
+}%
+\def\myversion{1.0}
+\date{}
+\usepackage{hyperref}
+\begin{document}
+\begin{titlepage}
+  \flushright\bfseries\huge
+  \vspace*{\stretch{0.4}}
+    \rule{\linewidth}{5pt}
+    \par
+    \vspace{1cm}
+    {\Huge Bookstore MySQL \par Submission Document\par}
+    \vspace{2cm}
+    for \\
+    \vspace{2cm}
+    Group cxc55311 \\
+    COMP 5531, Warmup Project \\
+    \vspace{2cm}
+
+    by Md Tanveer Alamgir \\
+     Craig Boucher\\
+     Osman Momoh\\
+     Fan Zou\\
+    \vspace{2cm}
+    \rule{\linewidth}{5pt}
+    \vspace{\stretch{1}}
+\end{titlepage}
+\tableofcontents
+\chapter{Introduction}
+This is the submission document for the warmup project in COMP 5531: Files and Databases in Concordia University. This document describes the MySQL database for a hypothetical bookstore which our group designed and implemented. This document also shows the resultant tuples generated from ten SQL queries. The requirements in this document are shown in a website which our group designed located at: https://cxc5531.encs.concordia.ca. This website uses HTML, CSS, PHP, and JavaScript in order to access the MySQL database and visualize both the tables and the results of the ten SQL queries.
+
+\chapter{Entity Relationship Diagram}
+We made our Entity relationship diagram(ERD) using LucidChart. Our ERD is a conceptual model which we use in the course.\\\\\\\\
+\begin{center}
+  \makebox[\textwidth]{\includegraphics[width=\paperwidth]{Bookstore ER diagram - Bookstore ER Diagram.jpeg}}
+\end{center}
+
+\chapter{SQL Statements to Create Database}
+These are the SQL statements which we used to create the tables in our database. \\\\
+CREATE TABLE Publisher
+(
+\begin{adjustwidth}{1cm}{0cm}
+    PublisherNumber VARCHAR(20),\\
+    PublisherName   VARCHAR(100),\\
+    Website         VARCHAR(100),\\
+    HeadOfficeName  VARCHAR(100),\\
+    Email           VARCHAR(100),\\
+    PhoneNumber     VARCHAR(100),\\
+    Address         VARCHAR(100),\\
+    City            VARCHAR(100),\\
+    PostalCode      VARCHAR(100),\\
+    Province        VARCHAR(100),\\
+    PRIMARY KEY (PublisherNumber)
+\end{adjustwidth}
+);\\
+CREATE TABLE Publisher_Branch
+(
+\begin{adjustwidth}{1cm}{0cm}
+    PublisherNumber VARCHAR(20),\\
+    BranchName      VARCHAR(100),\\
+    Representative  VARCHAR(100) NOT NULL,\\
+    PRIMARY KEY (PublisherNumber, BranchName),\\
+    FOREIGN KEY (PublisherNumber) REFERENCES Publisher (PublisherNumber) ON DELETE CASCADE
+\end{adjustwidth}
+);\\
+CREATE TABLE Bookstore
+(
+\begin{adjustwidth}{1cm}{0cm}
+    BookstoreName VARCHAR(100),\\
+    Email         VARCHAR(100),\\
+    PhoneNumber   VARCHAR(100),\\
+    Address       VARCHAR(100),\\
+    City          VARCHAR(100),\\
+    PostalCode    VARCHAR(100),\\
+    Province      VARCHAR(100),\\
+    PRIMARY KEY (BookstoreName)
+\end{adjustwidth}
+);\\
+CREATE TABLE Customer
+(
+\begin{adjustwidth}{1cm}{0cm}
+    CustomerID               VARCHAR(20),\\
+    FirstName                VARCHAR(100) NOT NULL,\\
+    LastName                 VARCHAR(100) NOT NULL,\\
+    CompanyName              VARCHAR(100),\\
+    PhoneNumber              VARCHAR(100),\\
+    Address                  VARCHAR(100),\\
+    City                     VARCHAR(100),\\
+    PostalCode               VARCHAR(100),\\
+    Province                 VARCHAR(100),\\
+    CumulativePurchaseNumber INT,\\
+    PRIMARY KEY (CustomerID)
+\end{adjustwidth}
+);\\
+CREATE TABLE Book
+(
+\begin{adjustwidth}{1cm}{0cm}
+    ISBN                VARCHAR(20),\\
+    Title               VARCHAR(100) NOT NULL,\\
+    Subject             VARCHAR(100),\\
+    CostPrice           DOUBLE,\\
+    SellingPrice        DOUBLE,\\
+    PublisherNumber     VARCHAR(20),\\
+    PublisherYtdQtySold INT,\\
+    PublisherQtyOnHand  INT,\\
+    PRIMARY KEY (ISBN),\\
+    FOREIGN KEY (PublisherNumber) REFERENCES Publisher (PublisherNumber)
+        ON DELETE SET NULL
+\end{adjustwidth}
+);\\
+CREATE TABLE Author
+(
+\begin{adjustwidth}{1cm}{0cm}
+    SIN       VARCHAR(20),\\
+    FirstName VARCHAR(100),\\
+    LastName  VARCHAR(100),\\
+    PRIMARY KEY (SIN)
+\end{adjustwidth}
+);\\
+CREATE TABLE Book_Author
+(
+\begin{adjustwidth}{1cm}{0cm}
+    ISBN VARCHAR(20),\\
+    SIN  VARCHAR(20),\\
+    PRIMARY KEY (ISBN, SIN),\\
+    FOREIGN KEY (ISBN) REFERENCES Book (ISBN),\\
+    FOREIGN KEY (SIN) REFERENCES Author (SIN)
+\end{adjustwidth}
+);\\
+CREATE TABLE Reader_Interest
+(
+\begin{adjustwidth}{1cm}{0cm}
+    CustomerID        VARCHAR(20),\\
+    BookGenreInterest VARCHAR(100),\\
+    PRIMARY KEY (CustomerID, BookGenreInterest),\\
+    FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID)
+        ON DELETE CASCADE
+\end{adjustwidth}
+);\\
+CREATE TABLE Inventory
+(
+\begin{adjustwidth}{1cm}{0cm}
+    ISBN          VARCHAR(20),\\
+    BookstoreName VARCHAR(100),\\
+    QtySold       INT,\\
+    QtyOnHand     INT,\\
+    PRIMARY KEY (ISBN, BookstoreName),\\
+    FOREIGN KEY (ISBN) REFERENCES Book (ISBN),\\
+    FOREIGN KEY (BookstoreName) REFERENCES Bookstore (BookstoreName)
+        ON DELETE CASCADE
+\end{adjustwidth}
+);\\
+CREATE TABLE BookOrder
+(
+\begin{adjustwidth}{1cm}{0cm}
+    OrderNumber VARCHAR(20),\\
+    OrderQty    INT,\\
+    OrderDate   DATE,\\
+    PRIMARY KEY (OrderNumber)
+\end{adjustwidth}
+);\\
+CREATE TABLE CustomerBookstoreOrder
+(
+\begin{adjustwidth}{1cm}{0cm}
+    OrderNumber   VARCHAR(20),\\
+    ISBN          VARCHAR(20),\\
+    BookstoreName VARCHAR(100),\\
+    CustomerID    VARCHAR(20),\\
+    BackOrder     BOOL,\\
+    PRIMARY KEY (OrderNumber, ISBN, BookstoreName),\\
+    FOREIGN KEY (OrderNumber) REFERENCES BookOrder (OrderNumber) ON DELETE CASCADE,\\
+    FOREIGN KEY (ISBN) REFERENCES Inventory (ISBN),\\
+    FOREIGN KEY (BookstoreName) REFERENCES Inventory (BookStoreName)\\
+    FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID)
+\end{adjustwidth}
+);\\
+CREATE TABLE PublisherBookstoreOrder
+(
+\begin{adjustwidth}{1cm}{0cm}
+    OrderNumber     VARCHAR(20),\\
+    ISBN            VARCHAR(20),\\
+    BookstoreName   VARCHAR(100),\\
+    PublisherNumber VARCHAR(20),\\
+    BranchName      VARCHAR(100),\\
+    BackOrder       BOOL,\\
+    PRIMARY KEY (OrderNumber, ISBN, BookstoreName),\\
+    FOREIGN KEY (OrderNumber) REFERENCES BookOrder (OrderNumber) ON DELETE CASCADE,\\
+    FOREIGN KEY (ISBN) REFERENCES Inventory (ISBN),\\
+    FOREIGN KEY (BookstoreName) REFERENCES Inventory (BookStoreName),\\
+    FOREIGN KEY (PublisherNumber, BranchName) REFERENCES Publisher_Branch (PublisherNumber, BranchName)
+\end{adjustwidth}
+);
+
+\chapter{SQL Statements to Express Queries}
+We thought of ten SQL query statements which are used to express the required queries in this project. We also included links in our website to view the resulting tuples
+\section{Get details of all books in stock}
+ SELECT b.*, i.BookstoreName, i.QtySold, i.QtyOnHand, p.PublisherName \\
+ 	FROM Book AS b, Inventory AS i, Publisher as p\\
+	 WHERE b.ISBN = i.ISBN AND b.PublisherNumber = p.PublisherNumber AND QtyOnHand $>$ 0
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=1
+\section{Get details of all back orders}
+SELECT DISTINCT(BO.OrderNumber), BO. OrderQty, BO.OrderDate, CO.BackOrder AS CustomerBackOrder, PO.BackOrder AS PublisherBackOrder\\
+	FROM BookOrder AS BO, CustomerBookstoreOrder As CO, PublisherBookstoreOrder as PO\\
+	WHERE ((BO.OrderNumber = CO.OrderNumber AND CO.BackOrder = true) OR (BO.OrderNumber = PO.OrderNumber AND PO.BackOrder = true))
+	AND (PO.BackOrder != CO.BackOrder);  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=2
+\section{For a given customer, get details of all his/her back orders}
+ SELECT bo.*, cb.ISBN, b.Title AS `Book Title`, b.Subject AS `Book Subject`, cb.BookstoreName, c.CustomerID, c.FirstName AS `Cus. First Name`, c.LastName AS `Cus. Last Name`\\
+        FROM BookOrder AS bo, CustomerBookstoreOrder AS cb, Customer AS c, Book AS b\\
+        WHERE cb.OrderNumber = bo.OrderNumber AND cb.ISBN = b.ISBN AND cb.CustomerID = c.CustomerID\\
+        AND c.FirstName = 'Alice' AND c.LastName = 'Mo' AND cb.BackOrder  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=3
+\section{For a given customer, get details of all his/her purchases made during a specific period of time}
+SELECT bo.*, cb.ISBN, cb.BookstoreName, b.Title AS `Book Title`, b.Subject AS `Book Subject`,
+            c.CustomerID, c.FirstName AS `Cus. First Name`, c.LastName AS `Cus. Last Name`,
+            CASE\\
+            WHEN cb.BackOrder THEN 'Back Ordered' ELSE 'Not Back Ordered'
+            END AS `Back Order`\\
+            FROM Book AS b, CustomerBookstoreOrder AS cb, Customer AS c, BookOrder\\
+            AS bo \\WHERE cb.OrderNumber = bo.OrderNumber AND cb.CustomerID = c.CustomerID
+            AND cb.ISBN = b.ISBN AND bo.OrderDate BETWEEN '2020-01-01' AND '2020-07-01'
+            AND c.FirstName = 'Alice' AND c.LastName = 'Mo'  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=4
+\section{Give a report of sales during a specific period of time}
+ SELECT *\\
+            FROM BookOrder AS B,
+            CustomerBookstoreOrder AS CBO,
+            Customer AS C
+            WHERE B.OrderNumber = CBO.OrderNumber\\
+            AND CBO.CustomerID = C.CustomerID
+            AND (NOT CBO.BackOrder)
+            AND (B.OrderDate BETWEEN '2020-01-01' AND '2020-07-01');  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=5
+\section{Find the title of book(s) that have the highest back-order}
+ SELECT DISTINCT Book.ISBN, Book.Title, MAX(BO.OrderQty) AS QuantityBackOrdered\\
+		FROM Book, BookOrder AS BO, CustomerBookstoreOrder as CO, PublisherBookstoreOrder as PO\\
+		WHERE ((BO.OrderNumber = CO.OrderNumber AND Book.ISBN = CO.ISBN AND CO.BackOrder = true) OR
+       		(BO.OrderNumber = PO.OrderNumber AND Book.ISBN = PO.ISBN AND PO.BackOrder = true)) AND (CO.BackOrder = true XOR PO.BackOrder = true) 
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=6
+\section{Give details of books that are supplied by a given publisher}
+ SELECT * \\FROM Book AS B, Publisher AS P\\
+            WHERE B.PublisherNumber = P.PublisherNumber
+            AND P.PublisherName = 'O\'REILLY'  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=7
+\section{For a given publisher, get details of the head office and all the branches for that publisher}
+ SELECT * \\FROM Publisher, Publisher_Branch\\
+            WHERE Publisher.PublisherNumber = Publisher_Branch.PublisherNumber
+            AND Publisher.PublisherName = 'O\'REILLY'  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=8
+\section{Get details of books that are in the inventory but there have never been a purchase for that specific book}
+ SELECT B.ISBN, Title, Subject, PublisherNumber\\
+            FROM Inventory AS I,
+            Book AS B\\
+            WHERE B.ISBN = I.ISBN AND I.QtySold = 0;  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=9
+\section{Get details of all books that are in the inventory for a given author}
+SELECT A.SIN, A.FirstName, A.LastName, B.*, I.QtyOnHand, I.QtySold\\
+            FROM Book AS B, Author AS A, Inventory AS I, Book_Author AS BA\\
+            WHERE B.ISBN = BA.ISBN
+            AND BA.SIN = A.SIN
+            AND B.ISBN = I.ISBN
+            AND A.FirstName = 'Henry' AND A.LastName = 'Korth';  
+\\\\\textbf{link:} https://cxc5531.encs.concordia.ca/php/controller.php?question=10
+
+\chapter{SQL Statements to Populate Tables}
+We populated our tables with several tuples such that each query would result in at least two representative tuples. Here are those insert statements.\\\\
+INSERT INTO Publisher (PublisherNumber, PublisherName, Website, HeadOfficeName, Email,
+                       PhoneNumber, Address, City, PostalCode, Province)\\
+VALUES\\ ('1', 'O\'REILLY', 'www.oreilly.com', 'Head office', 'master@oreilly.com',
+        '123-456-7890', '100 Street', 'Montreal', 'H5J 3Y1', 'Quebec'),
+       ('2', 'Anvil Press', 'www.anvilpress.com', 'Anvil Head Office', 'master@anvil.com', '547-252-5047',
+         '3008 Broad Road', 'Vancouver', 'V6B 3X5', 'British Columbia'),\\
+       ('3', 'ARP Books', 'www.arpbooks.org', 'ARP Head Office', 'contact@arpbooks.com', '204-942-7058', '205-70 Arthur Street',
+        'Winnipeg', 'R3B 1G7', 'Manitoba'),\\
+       ('4', 'Bibliotheque Quebecoise', 'www.livres-bq.com', 'Livre Quartier General', 'dnm@librairieduquebec.fr',
+        '514-523-1523', '1815 avenue De Lorimier', 'Montreal', 'H2K 3W6', 'Quebec'),\\
+       ('5', 'Black Moss Press', 'www.blackmosspress.com', 'Moss Head Office', 'alblackmosspress@gmail.com',
+        '519-222-7476', '2450 Byng Road', 'Windsor', ' N8W 3E8', 'Ontario'),\\
+       ('6', 'Black Rose Books', 'www.blackrosebooks.net', 'Black Rose Head Office', 'contact@blackrose.com',
+        '514-570-2665', '35788 Rue Leo Pariseau', 'Montreal', 'H2X 0A4', 'Quebec'),\\
+       ('7', 'Brick Books', 'www.brickbooks.ca', 'Brick Head Office', 'brenda@brickbooks.ca', '613-328-4947',
+        '487 King St. W', 'Kingston', 'K7L 2X7', 'Ontario'),\\
+       ('8', 'Canadian Poetry Press', 'www.canadianpoetry.org', 'Poetry Head Office', 'contact@cadpoetry.org',
+        '519-661-2111', '1151 Richmond St', 'London', 'N6A 3K7', 'Ontario'),\\
+       ('9', 'Cormorant Books', 'www.cormorantbooks.com', 'Cormorant Head Office', 'publicity@cormorantbooks.com',
+       '416-925-8887', '260 Spadina Avenue Suite 502', 'Toronto', 'M5T 2E4', 'Ontario'),\\
+       ('10', 'Coach House Books', 'www.chbooks.com', 'Coach Head Office', 'mail@chbooks.com', '416-979-2217',
+        '80 bpNichol Lane', 'Toronto', 'M5S 3J4', 'Ontario');\\\\
+INSERT INTO Publisher_Branch(PublisherNumber, BranchName, Representative)\\
+VALUES\\ ('1', 'Saint-Catherine', 'Michael Jack'),
+       ('2', 'Anvil South', 'John Doe'),\\
+       ('3', 'ARP East', 'Frank Serpico'),\\
+       ('4', 'Le Double Trouble', 'Guy Leblanc'),\\
+       ('5', 'Moss Apple Road', 'Jen Fresno'),\\
+       ('6', 'Prince-Arthur', 'Isabelle Marceau'),\\
+       ('7', 'Brick North', 'Trevor Walter'),\\
+       ('8', 'Queens', 'Mary Destiny'),\\
+       ('9', 'Rosedale', 'Patrick Winters'),\\
+       ('10', 'Chestnut', 'Clementine April');\\\\
+INSERT INTO Bookstore (BookstoreName, Email, PhoneNumber, Address, City, PostalCode, Province)\\
+VALUES\\ ('Indigo', 'contact@indigo.com', '438-123-4567', 'Street Main', 'Toronto', 'M4V M4T', 'Ontario'),
+       ('Fair\'s Fair Books', 'contact@fairbooks.com', '403-255-4011', '104 61 Ave SE', 'Calgary', 'T2G 0S2', 'Alberta'),\\
+       ('Monkeyshines', 'contact@moneykshines.com', '403-240-1723', '2215 33rd Ave SW', 'Calgary', ' T2T 1Z9', 'Alberta'),\\
+       ('Albion Books', 'contact@albionbooks.com', '604-662-3113', '523 Richards St.', 'Vancouver', 'V6B 2Z6',
+        'British Columbia'),\\
+       ('Book Warehouse', 'query@bookwarehouse.com', '604-872-5711', '632 West Broadway ', 'Vancouver', 'V5Z 1G1',
+        'British Columbia'),\\
+       ('Mill Street Books', 'contact@millbooks.com', '613-256-9090', '52 Mill St. ', 'Almonte', 'K0A 1A0', 'Ontario'),\\
+       ('Epic Books', 'inquiry@epicbooks.com', '905-525-6538', '226 Locke St. S. ', 'Hamilton', 'L8R 3B2', 'Ontario'),\\
+       ('Attic Books', 'info@atticbooks.ca ', '519-432-7277', '240 Dundas St.', 'London', 'N6A 1H3', 'Ontario'),\\
+       ('Appetite for Books', 'info@appetitebooks.ca', '514-369-2002', '388 Victoria Ave', 'Westmount', 'H3Z 2N4', 'Quebec'),\\
+       ('Argo Bookshop', 'info@argobookshop.ca', '514-931-3442', '1915 rue Sainte-Catherine ouest', 'Montreal', 'H3H 1M3',
+        'Quebec');\\\\
+INSERT INTO Customer (CustomerID, FirstName, LastName, CompanyName, PhoneNumber, Address,
+                      City, PostalCode, Province, CumulativePurchaseNumber)\\
+VALUES\\('234', 'Alice', 'Mo', 'Zoom', '514-945-2446', '7 Street AAA', 'Montreal', 'H5M 3C2', 'Quebec', '100'),\\
+       ('101', 'Joe', 'Palloc', 'Titus', '204-214-3546', '223 West Side Ave', 'Winnipeg', 'R2C 0A5', 'Manitoba', '200'),\\
+       ('765', 'Jane', 'Ruther', 'Pear', '416-453-4576', '101 Truffle Road', 'Toronto', 'M5X M5V', 'Ontario', '50'),\\
+       ('444', 'Brad', 'Sherwood', 'Cactus', '416-300-2458', '22 Paleo Avenue', 'Toronto', 'M6R M6S', 'Ontario', '80'),\\
+       ('221', 'Polly', 'Tenu', 'Orange', '416-213-7484', '9876 Hickson St.', 'Toronto', 'M7G M1F', 'Ontario', '60'),\\
+       ('565', 'Alfred', 'Worth', 'Wayne', '604-298-6565', '969 Witherspoon Road', 'Vancouver', 'V5K 1A9',
+        'British Columbia', '25'),\\
+       ('999', 'Penny', 'Lane', 'Butterfly', '604-564-2234', '1091 Abbington Street', 'Vancouver', 'V9K 1E9',
+        'British Columbia', '30'),\\
+       ('888', 'George', 'Brigkin', 'Peach', '604-232-7874', '234 Brown Street', 'Vancouver', 'V7K 2C4',
+        'British Columbia', '40'),\\
+       ('689', 'Felix', 'Tremblay', 'Rond', '514-345-4545', '3456 Mont-Royal Ave', 'Montreal', 'H3N 1T2', 'Quebec', '70'),\\
+       ('345', 'Monique', 'Rideau', 'Pomme', '438-567-2343', '452 Saint-Patrick St', 'Montreal', 'H6K H9J', 'Quebec',
+        '80');\\\\
+INSERT INTO Book (ISBN, Title, Subject, CostPrice, SellingPrice, PublisherNumber, PublisherYtdQtySold,
+                  PublisherQtyOnHand)\\
+VALUES\\ ('987-6-54-60197', 'Database System', 'Textbook', '150', '200', '1', '1000', '2000'),
+       ('498-3-34-14690', 'How to make hamburger', 'Cookbook', '20', '50', '1', '500', '800'),\\
+       ('563-4-56-35673', 'Chicken Soup Book', 'Cookbook', '15', '25', '2', '1500', '200'),\\
+       ('765-2-34-67894', 'Darkness Within', 'Fantasy', '30', '60', '3', '800', '400'),\\
+       ('876-8-56-98765', 'Autobiography of Tim', 'Biography', '20', '80', '4', '400', '0'),\\
+       ('234-4-23-45674', 'WW2: Tanks', 'History', '50', '100', '5', '700', '100'),\\
+       ('908-1-44-56765', 'Space Veteran', 'Sci-Fi', '45', '65', '6', '450', '300'),\\
+       ('765-3-80-56745', 'Shoe String Adventures', 'Novel', '20', '30', '7', '300', '250'),\\
+       ('456-3-45-67544', 'Quiet Trust', 'Romance', '10', '15', '8', '500', '100'),\\
+       ('876-8-56-45675', 'Counting Shapes', 'Childhood', '5', '10', '9', '450', '50');\\\\
+INSERT INTO Author (SIN, FirstName, LastName)\\
+VALUES\\ ('900-800-700', 'Abraham', 'Silberschatz'),\\
+       ('900-800-701', 'Henry', 'Korth'),\\
+       ('900-800-702', 'Albert', 'Einstein'),\\
+       ('310-347-729', 'Aaren', 'Ainslie'),\\
+       ('110-202-223', 'Netti', ' Fan'),\\
+       ('970-177-142', 'Alyda', ' Rowena'),\\
+       ('001-001-200', 'Pippa', ' Ariella'),\\
+       ('000-091-002', 'Merlina', ' Casi'),\\
+       ('023-304-109', 'Jena', ' Debra'),\\
+       ('190-001-000', 'Krysta', ' Jillie');\\\\
+INSERT INTO Book_Author (ISBN, SIN)\\
+VALUES \\('987-6-54-60197', '900-800-700'),
+       ('987-6-54-60197', '900-800-701'),\\
+       ('498-3-34-14690', '900-800-702'),\\
+       ('563-4-56-35673', '310-347-729'),\\
+       ('765-2-34-67894', '110-202-223'),
+       ('876-8-56-98765', '970-177-142'),\\
+       ('234-4-23-45674', '001-001-200'),\\
+       ('908-1-44-56765', '000-091-002'),\\
+       ('765-3-80-56745', '023-304-109'),\\
+       ('456-3-45-67544', '190-001-000');\\\\
+INSERT INTO Reader_Interest (CustomerID, BookGenreInterest)\\
+VALUES\\ ('234', 'Novel'),\\
+       ('101', 'Fantasy'),\\
+       ('765', 'History'),\\
+       ('444', 'Sci-Fi'),\\
+       ('221', 'Cookbook'),\\
+       ('565', 'Biography'),\\
+       ('999', 'Romance'),\\
+       ('888', 'Novel'),\\
+       ('689', 'Textbook'),\\
+       ('345', 'History');\\\\
+INSERT INTO Inventory (ISBN, BookstoreName, QtySold, QtyOnHand)
+VALUES\\ ('987-6-54-60197', 'Indigo', '0', '5'),\\
+       ('498-3-34-14690', 'Fair\'s Fair Books', '100', '150'),\\
+       ('563-4-56-35673', 'Albion Books', '20', '10'),\\
+       ('765-2-34-67894', 'Book Warehouse', '40', '8'),\\
+       ('876-8-56-98765', 'Mill Street Books', '10', '10'),\\
+       ('234-4-23-45674', 'Epic Books', '22', '13'),\\
+       ('908-1-44-56765', 'Attic Books', '1', '14'),\\
+       ('765-3-80-56745', 'Appetite for Books', '34', '18'),\\
+       ('456-3-45-67544', 'Argo Bookshop', '98', '2'),\\
+       ('876-8-56-45675', 'Monkeyshines', '20', '5');\\\\
+INSERT INTO BookOrder (OrderNumber, OrderQty, OrderDate)
+VALUES \\('7349', '10', '2020-5-20'),\\
+       ('7350', '20', '2020-5-20'),\\
+       ('8945', '15', '2020-6-3'),\\
+       ('1234', '4', '2020-4-19'),\\
+       ('4564', '10', '2020-4-2'),\\
+       ('3847', '5', '2020-1-18'),\\
+       ('2345', '8', '2020-2-23'),\\
+       ('5674', '3', '2020-4-15'),\\
+       ('4345', '2', '2020-3-20'),\\
+       ('1983', '11', '2020-5-1'),\\
+       ('8374', '13', '2020-2-27'),\\
+       ('8928', '50', '2020-3-22'),\\
+       ('3245', '100', '2020-2-11'),\\
+       ('6755', '120', '2020-3-19'),\\
+       ('9876', '80', '2020-1-28'),\\
+       ('2938', '90', '2020-5-22'),\\
+       ('4944', '75', '2020-4-20'),\\
+       ('2334', '110', '2020-5-10'),\\
+       ('6054', '90', '2020-3-11'),\\
+       ('2232', '200', '2020-5-13');\\\\
+INSERT INTO CustomerBookstoreOrder (OrderNumber, ISBN, BookstoreName, CustomerID, BackOrder)\\
+VALUES \\('7349', '498-3-34-14690', 'Indigo', '234', false),\\
+       ('7350', '987-6-54-60197', 'Fair\'s Fair Books', '234', true),\\
+       ('1234', '563-4-56-35673', 'Albion Books', '101', false),\\
+       ('4564', '765-2-34-67894', 'Book Warehouse', '765', false),\\
+       ('3847', '876-8-56-98765', 'Mill Street Books', '444', false),\\
+       ('2345', '234-4-23-45674', 'Epic Books', '221', false),\\
+       ('5674', '908-1-44-56765', 'Attic Books', '565', false),\\
+       ('4345', '765-3-80-56745', 'Appetite for Books', '999', false),\\
+       ('1983', '456-3-45-67544', 'Argo Bookshop', '888', false),\\
+       ('8374', '876-8-56-45675', 'Monkeyshines', '689', false);\\\\
+INSERT INTO PublisherBookstoreOrder (OrderNumber, ISBN, BookstoreName, PublisherNumber, BranchName, BackOrder)\\
+VALUES\\ ('8945', '498-3-34-14690', 'Indigo', '1', 'Saint-Catherine', false),\\
+       ('8928', '563-4-56-35673', 'Albion Books', '2', 'Anvil South', false),\\
+       ('3245', '765-2-34-67894', 'Book Warehouse', '3', 'ARP East', false),\\
+       ('6755', '876-8-56-98765', 'Mill Street Books', '4', 'Le Double Trouble', true),\\
+       ('9876', '234-4-23-45674', 'Epic Books', '5', 'Moss Apple Road', false),\\
+       ('2938', '908-1-44-56765', 'Attic Books', '6', 'Prince-Arthur', false),\\
+       ('4944', '765-3-80-56745', 'Appetite for Books', '7', 'Brick North', false),\\
+       ('2334', '456-3-45-67544', 'Argo Bookshop', '8', 'Queens', false),\\
+       ('6054', '876-8-56-45675', 'Monkeyshines', '9', 'Rosedale', false),\\
+       ('2232', '987-6-54-60197', 'Fair\'s Fair Books', '1', 'Saint-Catherine', false);\\
+
+\chapter{Viewing all Tuples in Each Table}
+
+In order to see the results of all tuples in the each table, please see our website: https://cxc5531.encs.concordia.ca/php/controller.php?question=12
+
+\end{document}
